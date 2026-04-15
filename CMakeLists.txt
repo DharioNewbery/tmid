@@ -1,11 +1,12 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(TMID VERSION 0.0.1 LANGUAGES CXX)
+project(TMID VERSION 0.0.01 LANGUAGES CXX)
 
 # Standard C++ settings
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 
 include(FetchContent)
 
@@ -30,6 +31,7 @@ set(HEADERS
     include/cppheader.hpp
     include/cppsocket.hpp
     include/server.hpp
+    include/client.hpp
     include/includes.hpp
 )
 
@@ -38,6 +40,10 @@ add_executable(${PROJECT_NAME}
     ${SOURCES}
     ${HEADERS}
 )
+
+if(WIN32)
+target_link_libraries(TMID PRIVATE ws2_32)
+endif()
 
 target_link_libraries(${PROJECT_NAME} 
     PRIVATE 
