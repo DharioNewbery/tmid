@@ -19,7 +19,11 @@ namespace re {
 
 inline static const int DEFAULT_PORT = 8080;
 
+#if defined(WIN32) || defined(WIN64)
+inline static const fs::path HOME           = std::getenv("USERPROFILE");
+#else
 inline static const fs::path HOME           = std::getenv("HOME");
+#endif
 
 inline static const fs::path SHARED_FOLDER     = HOME / ".local/share/tmid";
 inline static const fs::path GROUPS_FOLDER     = SHARED_FOLDER / "groups";
