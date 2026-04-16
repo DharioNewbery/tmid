@@ -46,7 +46,7 @@ void sync_client(cppsocket::Socket& client) {
     cppheader::Header file_header {"relativepath"};
     for (auto file: files) {
         // send header
-        file_header.set("relativepath", file);
+        file_header.set("relativepath", file.generic_string());
         client.send(file_header.to_string());
 
         // send data
