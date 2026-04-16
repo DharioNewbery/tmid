@@ -27,6 +27,7 @@ namespace cppfile {
         return true;
     }
 
+    /* String overload of write_to */
     bool write_to(const fs::path& path, const std::string &data) {
 
         std::vector<char> binary_data(data.begin(), data.end());
@@ -48,6 +49,16 @@ namespace cppfile {
 
         file.close();
 
+        return true;
+    }
+
+    /* String overload of read_from */
+    bool read_from(const fs::path& path, std::string &data) {
+        std::vector<char> binary_data;
+        if (!read_from(path, binary_data)) {
+            return false;
+        }
+        data.assign(binary_data.begin(), binary_data.end());
         return true;
     }
 
