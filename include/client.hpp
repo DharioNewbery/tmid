@@ -7,8 +7,6 @@ void sync(cppsocket::Socket &client) {
     globalHeaderBuilder gHeaderConstructor;
     globalHeaderObject gHeaderObj;
 
-    localHeaderBuilder lHeaderConstructor;
-    localHeaderObject lHeaderObj;
 
     // send operation
     client.send(op::SYNC);
@@ -30,10 +28,10 @@ void sync(cppsocket::Socket &client) {
     std::clog << "recieving ["<< gHeaderObj.packagesize << "] files" << std::endl;
 
     for (int i = 0; i < gHeaderObj.packagesize ; i++) {
-        
+        localHeaderBuilder lHeaderConstructor;
         std::string raw_file_header;
         client.recv(raw_file_header);
-        lHeaderObj = lHeaderConstructor.deserializer(raw_file_header);
+        localHeaderObject lHeaderObj = lHeaderConstructor.deserializer(raw_file_header);
         
         std::vector<char> data;
         client.recv(data);
