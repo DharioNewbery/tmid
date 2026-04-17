@@ -4,7 +4,10 @@
 #include "../include/includes.hpp"
 
 void sync(cppsocket::Socket &client) {
-    
+    globalHeaderBuilder gHeaderConstructor;
+    globalHeaderObject gHeaderObj;
+
+
     // send operation
     client.send(op::SYNC);
 
@@ -20,22 +23,21 @@ void sync(cppsocket::Socket &client) {
     // recieve package header
     std::string raw_package_header;
     client.recv(raw_package_header);
-    auto package_header = cppheader::parse_header(raw_package_header);
+    gHeaderObj = gHeaderConstructor.deserializer(raw_package_header);
 
-    int file_count = std::stoi(package_header.get("packagesize"));
-    std::clog << "recieving ["<< file_count << "] files" << std::endl;
+    std::clog << "recieving ["<< gHeaderObj.packagesize << "] files" << std::endl;
 
-    for (int i = 0; i < file_count; i++) {
-        
+    for (int i = 0; i < gHeaderObj.packagesize ; i++) {
+        localHeaderBuilder lHeaderConstructor;
         std::string raw_file_header;
         client.recv(raw_file_header);
-        auto file_header = cppheader::parse_header(raw_file_header);
-
+        localHeaderObject lHeaderObj = lHeaderConstructor.deserializer(raw_file_header);
+        
         std::vector<char> data;
         client.recv(data);
 
         // auto path = HOME / file_header.get("relativepath");
-        auto path = (HOME / "Documents/TESTING_FOLDER" / file_header.get("relativepath"));
+        auto path = (HOME / "Documents/TESTING_FOLDER" / lHeaderObj.relativepath );
         std::clog << "writing data to: " << path << std::endl;
         if (!cppfile::create_dirs(path.parent_path())) {
             std::cerr << "[ERROR] failed to create folder structure: " << path << std::endl;

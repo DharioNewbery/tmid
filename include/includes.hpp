@@ -1,6 +1,7 @@
 #ifndef _INCLUDES_HPP_
 #define _INCLUDES_HPP_
 
+#include "header.hpp"
 #include "cppfile.hpp"
 #include "cppheader.hpp"
 #include "cppsocket.hpp"
