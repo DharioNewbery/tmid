@@ -1,10 +1,11 @@
 #ifndef _INCLUDES_HPP_
 #define _INCLUDES_HPP_
 
+#include <cppsocket.hpp>
+#include <yaml-cpp/yaml.h>
+
 #include "header.hpp"
 #include "cppfile.hpp"
-#include "cppsocket.hpp"
-#include "yaml-cpp/yaml.h"
 
 namespace op {
     inline static const std::string AUTH = "AUTH";
