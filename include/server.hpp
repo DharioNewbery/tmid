@@ -1,6 +1,8 @@
 #ifndef _SERVER_HPP_
 #define _SERVER_HPP_
 
+
+
 #include "../include/includes.hpp"
 
 void create_group(const std::string &group_alias) {
@@ -27,6 +29,8 @@ bool authenticate_client(cppsocket::Socket& client) {
 // send package size
 // loop: send file's header, send file's data
 void sync_client(cppsocket::Socket& client) {
+    globalHeaderObject gHeaderObj;
+    localHeaderObject lHeaderObj;
 
     std::cout << "Synchronizing user...\n";
 
@@ -36,18 +40,16 @@ void sync_client(cppsocket::Socket& client) {
     auto files = cppfile::get_path_tree_from(target_folder);
 
     // prepare and send package header
-    cppheader::Header package_header {"packagesize"};
-    package_header.set("packagesize", std::to_string(files.size()));
+    gHeaderObj.packagesize = files.size();
 
     std::clog << "total number of files: " << files.size() << std::endl;
-    client.send(package_header.to_string());
+    client.send(gHeaderObj.serializer());
 
     // prepare and send individual files
-    cppheader::Header file_header {"relativepath"};
     for (auto file: files) {
         // send header
-        file_header.set("relativepath", file.generic_string());
-        client.send(file_header.to_string());
+        lHeaderObj.relativepath = file.generic_string();
+        client.send(lHeaderObj.serializer());
 
         // send data
         std::vector<char> data;
