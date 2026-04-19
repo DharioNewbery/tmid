@@ -7,21 +7,15 @@
 #include "header.hpp"
 #include "cppfile.hpp"
 
-namespace op {
-    inline static const std::string AUTH = "AUTH";
-    inline static const std::string SYNC = "SYNC";
-}
-
-namespace re {
-    inline static const std::string TRUE  = "TRUE";
-    inline static const std::string FALSE = "FALS";
-    inline static const std::string DONE  = "DONE";
-}
 
 inline static const int DEFAULT_PORT = 8080;
 
 #if defined(WIN32) || defined(WIN64)
 inline static const fs::path HOME           = std::getenv("USERPROFILE");
+
+#undef TRUE
+#undef FALSE
+
 #else
 inline static const fs::path HOME           = std::getenv("HOME");
 #endif
@@ -44,5 +38,17 @@ inline static const std::string GROUP_PARTICIPANTS_FILENAME = "group_participant
 inline static const YAML::Node GROUP_PARTICIPANTS_TEMPLATE  = YAML::Load(R"(
 participants: []
 )");
+
+namespace op {
+    inline static const std::string AUTH = "AUTH";
+    inline static const std::string SYNC = "SYNC";
+}
+
+namespace re {
+    inline static const std::string TRUE  = "TRUE";
+    inline static const std::string FALSE = "FALS";
+    inline static const std::string DONE  = "DONE";
+}
+
 
 #endif
