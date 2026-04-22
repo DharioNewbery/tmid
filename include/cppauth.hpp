@@ -5,7 +5,31 @@
 #include <ranges>
 #include <fstream>
 #include <sstream>
-#include <exception>
+#include <memory>
+#include <concepts>
+#include <type_traits>
+
+
+// Essa função também deve ser movido para algum lugar mais conveniente 
+template<typename T>
+std::streampos getFileSize(T& file){
+    static_assert(
+        std::is_same<T, std::ifstream> ||
+        std::is_same<T, std::ofstream> ||
+        std::is_same<T, std::fstream>,
+        "The type has to be a file type"
+    );
+
+    if (!file.is_open())
+        throw std::runtime_error("The current file is not open");
+    
+    File.seekg(std::ios_base::end);
+    std::streampos fileSize = dbFile.tellg();
+    File.seekg(std::ios_base::beg);
+
+    return fileSize;
+}
+
 
 class Auth{
 public:
@@ -37,10 +61,8 @@ public:
         if ( !dbFile.is_open() )
             throw std::runtime_error("Fail to open the file");
 
-        dbFile.seekg(std::ios_base::end);
-        std::streampos fileSize = dbFile.tellg();
-        dbFile.seekg(std::ios_base::beg);
-
+        std::streampos fileSize = getFileSize<std::ifstream>(dbFile);
+        
         std::string fileContent;
         fileContent.resize(fileSize);
 
@@ -68,7 +90,7 @@ public:
     }
 
     void popMap(uint16_t pin){
-        auto search = clientMap.find(pin);
+        std::map<uint16_t, std::string>::iterator search = clientMap.find(pin);
         if ( search == clientMap.end())
             throw std::runtime_error("There is no pair with the current key");
         
@@ -76,13 +98,42 @@ public:
         
     }
     void addMap(uint16_t pin, std::string clientData){
-        auto search = clientMap.find(pin);
+        std::map<uint16_t, std::string>::iterator search = clientMap.find(pin);
+        
         if ( search == clientMap.end())
             throw std::runtime_error("The curremt key already exist");
-        std::pair<uint16_t, std::string> newPair(pin, clientData);
+        
+            std::pair<uint16_t, std::string> newPair(pin, clientData);
+        
         clientMap.insert(newPair);
     }
 
+    bool containsClient(uint16_t pin){
+        std::map<uint16_t, std::string>::iterator search = clientMap.find(pin);
+        
+        return search != clientMap.end();
+    }
+
+    std::string getClientContent(uint16_t pin){
+        std::map<uint16_t, std::string>::iterator search = clientMap.find(pin);
+        
+        if (search == clientMap.end()) throw std::runtime_error("The current client is not on the map");
+        
+        return clientMap[pin];
+    }  
 private:
     std::map<uint16_t, std::string> clientMap; 
 };
+
+
+/*
+
+Dhario! Penso na lógica dessa forma -> Adicionar a root do tmid a pasta data/ e então o "DB" seria o nome do group.txt 
+
+Coloque esse parte do código em algum lugar mais conveniente !
+
+*/
+
+
+
+
