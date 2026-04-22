@@ -48,6 +48,13 @@ void sync(cppsocket::Socket &client) {
     }
 }
 
+void sendUserOperation(cppsocket::Socket &client, uint16_t userPin, uint8_t userOperation){
+    userHeaderObject userObj;
+    userObj.userOperation = usertOperation;
+    userObj.userPin = userPin;
+    client.send(userObj.serializer());
+}
+
 void run_client() {
     cppsocket::Socket client = cppsocket::connect("127.0.0.1", 8080);
     sync(client);
